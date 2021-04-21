@@ -5,7 +5,8 @@ Paynl.Config.setApiToken('609f82277a2afab05e845011ebf57e05b1c11aca');
 Paynl.Config.setServiceId('SL-9540-4851'); 
 
 const hostname = '127.0.0.1';
-const port = 3000;
+var port = process.env.PORT||3000;
+
 
 const app = express();
 
@@ -105,6 +106,6 @@ app.post('/startTransaction',function (req, res){
   );
 })
 
-app.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}/`);
 });
