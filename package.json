@@ -1,0 +1,28 @@
+{
+  "name": "delavkiaanstore",
+  "version": "14.16.1",
+  "description": "De Lavkiaan Checkout App",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "paynl-sdk": "^1.1.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WimSchmitz/DeLavkiaanStore.git"
+  },
+  "keywords": [
+    "Webcheckout;",
+    "API"
+  ],
+  "author": "Wim Schmitz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WimSchmitz/DeLavkiaanStore/issues"
+  },
+  "homepage": "https://github.com/WimSchmitz/DeLavkiaanStore#readme"
+}
