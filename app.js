@@ -18,7 +18,7 @@ app.get('/startTransactionTest',function (req, res){
 
   Paynl.Transaction.start({
     //the amount in euro
-    amount: 1,
+    amount: 48,
 
     testMode: true,
     
@@ -49,7 +49,7 @@ app.get('/startTransaction',function (req, res){
 
   Paynl.Transaction.start({
     //the amount in euro
-    amount: 1,
+    amount: 48,
     
     //we redirect the user back to this url after the payment
     returnUrl: "http://www.google.be",
