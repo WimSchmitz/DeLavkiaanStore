@@ -9,6 +9,10 @@ const port = 3000;
 
 const app = express();
 
+app.get('/',function (req, res){
+res.send("The API works!")
+});
+
 app.get('/startTransactionTest',function (req, res){
 
   Paynl.Transaction.start({
