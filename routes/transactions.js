@@ -33,6 +33,8 @@ router.get('/startTransactionTest',function (req, res){
     }, 
     function (error) {
       console.error(error); 
+            
+      res.status(500).send(error)
     }
   );
 })
@@ -79,7 +81,9 @@ router.post('/startTransactionTest',function (req, res){
       res.status(200).send(result.paymentURL)
     }, 
     function (error) {
-      console.error(error); 
+      console.error(error);
+      
+      res.status(500).send(error)
     }
   );
 })
@@ -129,6 +133,8 @@ router.post('/startTransaction',function (req, res){
     }, 
     function (error) {
       console.error(error); 
+            
+      res.status(500).send(error)
     }
   );
 })
