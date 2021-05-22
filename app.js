@@ -1,111 +1,40 @@
-var Paynl = require('paynl-sdk');
+var createError = require('http-errors');
 var express = require('express');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
 
-Paynl.Config.setApiToken('609f82277a2afab05e845011ebf57e05b1c11aca');
-Paynl.Config.setServiceId('SL-9540-4851'); 
+var pagesRouter = require('./routes/pages');
+var transactionsRouter = require('./routes/transactions');
 
-const hostname = '127.0.0.1';
-var port = process.env.PORT||3000;
+var app = express();
 
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
-const app = express();
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/',function (req, res){
-  res.send("The API works!")
+app.use('/', pagesRouter);
+app.use('/transactions', transactionsRouter)
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  next(createError(404));
 });
 
-app.get('/startTransactionTest',function (req, res){
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  Paynl.Transaction.start({
-    //the amount in euro
-    amount: 48,
-
-    testMode: true,
-    
-    //we redirect the user back to this url after the payment
-    returnUrl: "http://www.google.be",
-    
-    //the ip address of the user
-    ipAddress: '81.164.178.176' 
-  })
-  .subscribe(
-    function (result) {
-      console.log(result)
-      //redirect the user to this url to complete the payment
-      console.log(result.paymentURL); 
-      
-      // the transactionId, use this to fetch the transaction later
-      console.log(result.transactionId);
-
-      res.redirect(result.paymentURL)
-    }, 
-    function (error) {
-      console.error(error); 
-    }
-  );
-})
-
-app.get('/startTransaction',function (req, res){
-
-  Paynl.Transaction.start({
-    //the amount in euro
-    amount: 48,
-    
-    //we redirect the user back to this url after the payment
-    returnUrl: "http://www.google.be",
-    
-    //the ip address of the user
-    ipAddress: '81.164.178.176' 
-  })
-  .subscribe(
-    function (result) {
-      console.log(result)
-      //redirect the user to this url to complete the payment
-      console.log(result.paymentURL); 
-      
-      // the transactionId, use this to fetch the transaction later
-      console.log(result.transactionId);
-
-      res.redirect(result.paymentURL)
-    }, 
-    function (error) {
-      console.error(error); 
-    }
-  );
-})
-
-
-app.post('/startTransaction',function (req, res){
-  res.send("We will redirect you to the payment resolver soon, please stand by!")
-  Paynl.Transaction.start({
-    //the amount in euro
-    amount: req.data,
-
-    testMode: true,
-    
-    //we redirect the user back to this url after the payment
-    returnUrl: "http://www.google.be",
-    
-    //the ip address of the user
-    ipAddress: '81.164.178.176' 
-  })
-  .subscribe(
-    function (result) {
-      console.log(result)
-      //redirect the user to this url to complete the payment
-      console.log(result.paymentURL); 
-      
-      // the transactionId, use this to fetch the transaction later
-      console.log(result.transactionId);
-
-      res.redirect(result.paymentURL)
-    }, 
-    function (error) {
-      console.error(error); 
-    }
-  );
-})
-
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}/`);
+  // render the error page
+  res.status(err.status || 500).send("Error!")
 });
+
+module.exports = app;
