@@ -16,7 +16,7 @@ router.get('/startTransactionTest',function (req, res){
     testMode: true,
     
     //we redirect the user back to this url after the payment
-    returnUrl: "https://www.google.be",
+    returnUrl: "https://brouwerijdelavkiaan.be/paymentSuccess.html",
     
     //the ip address of the user
     ipAddress: '81.164.178.176' 
@@ -42,7 +42,7 @@ router.get('/startTransactionTest',function (req, res){
 router.post('/startTransactionTest',function (req, res){
   Paynl.Transaction.start({
     //we redirect the user back to this url after the payment
-    returnUrl: req.body.returnURL,
+    returnUrl: "https://brouwerijdelavkiaan.be/paymentSuccess.html",
     //the ip address of the user
     ipAddress: '81.164.178.176' ,
     //testmode
@@ -93,7 +93,7 @@ router.post('/startTransaction',function (req, res){
 
   Paynl.Transaction.start({
     //we redirect the user back to this url after the payment
-    returnUrl: "http://" + host + "/paymentReturn",
+    returnUrl: "https://brouwerijdelavkiaan.be/paymentSuccess.html",
     //the ip address of the user
     ipAddress: '81.164.178.176' ,
     //testmode
