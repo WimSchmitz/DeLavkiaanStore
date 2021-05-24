@@ -6,14 +6,16 @@ Paynl.Config.setApiToken('609f82277a2afab05e845011ebf57e05b1c11aca');
 Paynl.Config.setServiceId('SL-9540-4851'); 
 
 router.post('/startTransactionTest',function (req, res){
-  startTransaction(true)
+  console.log(req.body)
+  startTransaction(true, req, res)
 })
 
 router.post('/startTransaction/',function (req, res){
-  startTransaction(false)
+  console.log(req.body)
+  startTransaction(false, req, res)
 })
 
-function startTransaction(testMode){
+function startTransaction(testMode, req, res){
   kost = (Number(req.body.amount) * 48).toFixed(2);
 
   Paynl.Transaction.start({
@@ -41,7 +43,7 @@ function startTransaction(testMode){
       streetName: req.body.street,
       houseNumber: req.body.number,
       houseNumberExtension: req.body.ponumber,
-      zipCode: req.body.postal,
+      zipCode: req.body.zip,
       city: req.body.city
     }
   })
