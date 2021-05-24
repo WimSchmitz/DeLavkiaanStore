@@ -122,6 +122,22 @@ router.post('/subscribe', function(req, res){
   });
 })
 
+router.post('/question', function(req,res){
+  var questionData = {
+    from: `${req.body.name} <${req.body.email}>`,
+    to: "brouwerijdelavkiaan@gmail.com",
+    subject: 'Vraag van ' + req.body.name ,
+    text: req.body.question
+  };
+  
+  mailgun.messages().send(questionData, function (mailerr, mailresp) {
+    if (mailresp){
+      res.status(200).send("Mail Sent!");
+    } else {
+      res.status(500).send("Bad Mail Request. " + mailerr);
+    }
+  });
+})
 
 module.exports = router;
 
