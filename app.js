@@ -4,8 +4,9 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-var pagesRouter = require('./routes/pages');
+var indexRouter = require('./routes');
 var transactionsRouter = require('./routes/transactions');
+var mailRouter = require('./routes/mails')
 
 var app = express();
 
@@ -26,8 +27,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', pagesRouter);
+app.use('/', indexRouter);
 app.use('/transactions', transactionsRouter)
+app.use('/mails', mailRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -36,12 +38,8 @@ app.use(function(req, res, next) {
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500).send("Error!")
+  console.log(err)
+  res.status(err.status || 500).send(err)
 });
 
 module.exports = app;

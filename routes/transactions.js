@@ -10,7 +10,7 @@ router.post('/startTransactionTest',function (req, res){
   startTransaction(true, req, res)
 })
 
-router.post('/startTransaction/',function (req, res){
+router.post('/startTransaction',function (req, res){
   console.log(req.body)
   startTransaction(false, req, res)
 })
