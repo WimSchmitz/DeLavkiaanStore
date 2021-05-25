@@ -3,61 +3,11 @@ const mailgun = require("mailgun-js")({
   domain: 'sandbox5240d86042294664b8532ef5c7891fe7.mailgun.org'
 });;
 var express = require('express');
-var mailcomposer = require('mailcomposer');
-var fs = require("fs");
-var handlebars = require("handlebars");
-
+var mailSender = require('../sendMail.js')
 var router = express.Router();
 
-var readHTMLFile = function(path, callback){
-  fs.readFile(path, {encoding: 'utf-8'}, function(err, html){
-    if (err) {
-      console.error(err);
-      callback(err);
-    } else {
-      callback (null, html);
-    }
-  })
-}
-
 router.get('/testMail',function (req, res){
-  readHTMLFile("./resources/successMail.html", function(err, html){
-    var template = handlebars.compile(html);
-    var replacements = {
-      firstname: "Wim",
-      amount: "0,00"
-    }
-    var htmlToSend = template(replacements);
-    
-    var mail = mailcomposer({
-      from: 'Brouwerij De Lavkiaan <brouwerijdelavkiaan@gmail.com>',
-      to: "Wim Schmitz <wim@schmitz.cc>",
-      subject: 'Bedankt voor je Bestelling!',
-      html: htmlToSend
-    });
-    
-    mail.build(function(mailBuildError, message) {
-    
-      var dataToSend = {
-        to: "Wim Schmitz <wim@schmitz.cc>",
-        message: message.toString('ascii')
-      };
-  
-      mailgun.messages().sendMime(dataToSend, function (error, body) {
-        if (error) {
-          console.log(error);
-          res.status(500).send("Bad Mail Request.")
-        } else {
-          console.log(body);
-          res.status(200).send("Mail Sent!");
-        }
-      });
-    });
-  })
-})
-
-router.post('/sendSuccessMail',function (req, res){
-  sendSuccessMail(req.body.fname, req.body.email, req.body.amount, function (error, body){
+  mailSender.sendSuccessMail("Wim", "wim@schmitz.cc", "10,00", function (error, body){
     if (error) {
       console.log(error);
       res.status(500).send("Bad Mail Request.")
@@ -68,33 +18,17 @@ router.post('/sendSuccessMail',function (req, res){
   })
 })
 
-function sendSuccessMail(fname, email, amount, callback){
-  readHTMLFile("./resources/successMail.html", function(err, html){
-    var template = handlebars.compile(html);
-    var replacements = {
-      firstname: fname,
-      amount: amount
+router.post('/sendSuccessMail',function (req, res){
+  mailSender.sendSuccessMail(req.body.fname, req.body.email, req.body.amount, function (error, body){
+    if (error) {
+      console.log(error);
+      res.status(500).send("Bad Mail Request.")
+    } else {
+      console.log(body);
+      res.status(200).send("Mail Sent!");
     }
-    var htmlToSend = template(replacements);
-    
-    var mail = mailcomposer({
-      from: 'Brouwerij De Lavkiaan <brouwerijdelavkiaan@gmail.com>',
-      to: email,
-      subject: 'Bedankt voor je Bestelling!',
-      html: htmlToSend
-    });
-    
-    mail.build(function(mailBuildError, message) {
-    
-      var dataToSend = {
-        to: email,
-        message: message.toString('ascii')
-      };
-  
-      mailgun.messages().sendMime(dataToSend, callback);
-    });
-  });
-}
+  })
+})
 
 router.post('/subscribe', function(req, res){
   var subscribeData = {
@@ -143,6 +77,6 @@ router.post('/question', function(req,res){
   });
 })
 
-module.exports = {router,sendSuccessMail};
+module.exports = router;
 
 

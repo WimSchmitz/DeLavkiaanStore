@@ -1,5 +1,5 @@
 var express = require('express');
-var mails = require("./mails.js");
+var mailSender = require("../sendMail.js");
 var router = express.Router();
 var Paynl = require('paynl-sdk');
 
@@ -64,7 +64,7 @@ router.get('/exchangeURL',function (req, res){
     function(result){
       if (result.isPaid()) {
         console.log(`The transaction ${req.params.order_id} is completed`);
-        mails.sendSuccessMail(result.enduser.initials, result.enduser.lastName, result.paymentDetails.amount, function (error, body){
+        mailSender.sendSuccessMail(result.enduser.initials, result.enduser.lastName, result.paymentDetails.amount, function (error, body){
           if (error) {
             console.error(error);
             res.status(200).send("TRUE")
