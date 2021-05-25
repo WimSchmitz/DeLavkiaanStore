@@ -49,7 +49,7 @@ function startTransaction(testMode, req, res){
       countryCode: "BE"
     },
 
-    extra1: req.body.leaderboard
+    extra1: req.body.leaderboard ? "yes" : "no"
   })
   .subscribe(
     function (result) {
