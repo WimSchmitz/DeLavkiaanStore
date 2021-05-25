@@ -45,7 +45,8 @@ function startTransaction(testMode, req, res){
       houseNumber: req.body.number,
       houseNumberExtension: req.body.ponumber,
       zipCode: req.body.zip,
-      city: req.body.city
+      city: req.body.city,
+      countryCode: "BE"
     }
   })
   .subscribe(
@@ -63,8 +64,9 @@ router.get('/exchangeURL',function (req, res){
   Paynl.Transaction.get(req.query.order_id).subscribe(
     function(result){
       if (result.isPaid()) {
-        console.log(`The transaction ${req.params.order_id} is completed`);
-        mailSender.sendSuccessMail(result.enduser.initials, result.enduser.lastName, result.paymentDetails.amount, function (error, body){
+        console.log(`The transaction ${req.query.order_id} is completed`);
+        console.log("Sending mail to:" + result.enduser)
+        mailSender.sendSuccessMail(result.enduser.initials, result.enduser.emailAddress, result.paymentDetails.amount, function (error, body){
           if (error) {
             console.error(error);
             res.status(200).send("TRUE")
@@ -76,11 +78,11 @@ router.get('/exchangeURL',function (req, res){
 
       }
       if (result.isCanceled()) {
-        console.log(`Tranasaction ${req.params.order_id} is canceled, restock the items`);
+        console.log(`Tranasaction ${req.query.order_id} is canceled, restock the items`);
         res.status(200).send("TRUE")
       }
       if (result.isBeingVerified()) {
-        console.log(`Transaction ${req.params.order_id} needs to be verified first, possible fraud`);
+        console.log(`Transaction ${req.query.order_id} needs to be verified first, possible fraud`);
         res.status(200).send("TRUE")
       }
     },
