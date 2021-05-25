@@ -1,6 +1,7 @@
 const mailgun = require("mailgun-js")({
   apiKey: '155d1170fcaa9c87a6e2585bc2ffeae7-fa6e84b7-17ebdc0a', 
-  domain: 'sandbox5240d86042294664b8532ef5c7891fe7.mailgun.org'
+  domain: 'mail.brouwerijdelavkiaan.be',
+  host: "api.eu.mailgun.net"
 });;
 var express = require('express');
 var mailSender = require('../sendMail.js')
