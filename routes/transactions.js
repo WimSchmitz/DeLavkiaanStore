@@ -65,8 +65,8 @@ router.get('/exchangeURL',function (req, res){
     function(result){
       if (result.isPaid()) {
         console.log(`The transaction ${req.query.order_id} is completed`);
-        console.log("Sending mail to:" + result.enduser)
-        mailSender.sendSuccessMail(result.enduser.initials, result.enduser.emailAddress, result.paymentDetails.amount, function (error, body){
+        console.log("Sending mail to:" + result.enduser.emailAddress)
+        mailSender.sendSuccessMail(result.enduser.initials, result.enduser.emailAddress, Number(result.paymentDetails.amount).toFixed(2), function (error, body){
           if (error) {
             console.error(error);
             res.status(200).send("TRUE")
@@ -75,7 +75,6 @@ router.get('/exchangeURL',function (req, res){
             res.status(200).send("TRUE")
           }
         })
-
       }
       if (result.isCanceled()) {
         console.log(`Tranasaction ${req.query.order_id} is canceled, restock the items`);
