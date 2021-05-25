@@ -60,7 +60,7 @@ function startTransaction(testMode, req, res){
 }
 
 router.get('/exchangeURL',function (req, res){
-  Paynl.Transaction.get(req.params.order_id).subscribe(
+  Paynl.Transaction.get(req.query.order_id).subscribe(
     function(result){
       if (result.isPaid()) {
         console.log(`The transaction ${req.params.order_id} is completed`);
