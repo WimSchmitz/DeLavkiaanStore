@@ -47,7 +47,9 @@ function startTransaction(testMode, req, res){
       zipCode: req.body.zip,
       city: req.body.city,
       countryCode: "BE"
-    }
+    },
+
+    extra1: req.body.leaderboard
   })
   .subscribe(
     function (result) {
