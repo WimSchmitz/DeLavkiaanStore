@@ -1,4 +1,5 @@
 var express = require('express');
+var mails = require("./mails.js");
 var router = express.Router();
 var Paynl = require('paynl-sdk');
 
@@ -49,21 +50,45 @@ function startTransaction(testMode, req, res){
   })
   .subscribe(
     function (result) {
-      console.log(result)
-      //redirect the user to this url to complete the payment
-      console.log(result.paymentURL); 
-      
-      // the transactionId, use this to fetch the transaction later
-      console.log(result.transactionId);
-
       res.status(200).send(result.paymentURL)
     }, 
     function (error) {
       console.error(error);
-      
       res.status(500).send(error)
     }
   );
 }
+
+router.get('/exchangeURL',function (req, res){
+  Paynl.Transaction.get(req.params.order_id).subscribe(
+    function(result){
+      if (result.isPaid()) {
+        console.log(`The transaction ${req.params.order_id} is completed`);
+        mails.sendSuccessMail(result.enduser.initials, result.enduser.lastName, result.paymentDetails.amount, function (error, body){
+          if (error) {
+            console.error(error);
+            res.status(200).send("TRUE")
+          } else {
+            console.log("Confirmation Mail Sent!");
+            res.status(200).send("TRUE")
+          }
+        })
+
+      }
+      if (result.isCanceled()) {
+        console.log(`Tranasaction ${req.params.order_id} is canceled, restock the items`);
+        res.status(200).send("TRUE")
+      }
+      if (result.isBeingVerified()) {
+        console.log(`Transaction ${req.params.order_id} needs to be verified first, possible fraud`);
+        res.status(200).send("TRUE")
+      }
+    },
+    function(error){
+      console.error(error);
+      res.status(500).send("FALSE")
+    }
+  );
+})
 
 module.exports = router;

@@ -57,17 +57,29 @@ router.get('/testMail',function (req, res){
 })
 
 router.post('/sendSuccessMail',function (req, res){
+  sendSuccessMail(req.body.fname, req.body.email, req.body.amount, function (error, body){
+    if (error) {
+      console.log(error);
+      res.status(500).send("Bad Mail Request.")
+    } else {
+      console.log(body);
+      res.status(200).send("Mail Sent!");
+    }
+  })
+})
+
+function sendSuccessMail(fname, email, amount, callback){
   readHTMLFile("./resources/successMail.html", function(err, html){
     var template = handlebars.compile(html);
     var replacements = {
-      firstname: req.body.fname,
-      amount: req.body.amount
+      firstname: fname,
+      amount: amount
     }
     var htmlToSend = template(replacements);
     
     var mail = mailcomposer({
       from: 'Brouwerij De Lavkiaan <brouwerijdelavkiaan@gmail.com>',
-      to: req.body.email,
+      to: email,
       subject: 'Bedankt voor je Bestelling!',
       html: htmlToSend
     });
@@ -75,22 +87,14 @@ router.post('/sendSuccessMail',function (req, res){
     mail.build(function(mailBuildError, message) {
     
       var dataToSend = {
-        to: req.body.email,
+        to: email,
         message: message.toString('ascii')
       };
   
-      mailgun.messages().sendMime(dataToSend, function (error, body) {
-        if (error) {
-          console.log(error);
-          res.status(500).send("Bad Mail Request.")
-        } else {
-          console.log(body);
-          res.status(200).send("Mail Sent!");
-        }
-      });
+      mailgun.messages().sendMime(dataToSend, callback);
     });
-  })
-})
+  });
+}
 
 router.post('/subscribe', function(req, res){
   var subscribeData = {
@@ -127,7 +131,7 @@ router.post('/question', function(req,res){
     from: `${req.body.name} <${req.body.email}>`,
     to: "brouwerijdelavkiaan@gmail.com",
     subject: 'Vraag van ' + req.body.name ,
-    text: req.body.question
+    text: req.body.body
   };
   
   mailgun.messages().send(questionData, function (mailerr, mailresp) {
@@ -139,6 +143,6 @@ router.post('/question', function(req,res){
   });
 })
 
-module.exports = router;
+module.exports = {router,sendSuccessMail};
 
 
