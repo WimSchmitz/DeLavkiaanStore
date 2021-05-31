@@ -33,7 +33,7 @@ router.post('/sendSuccessMail',function (req, res){
 
 router.post('/subscribe', function(req, res){
   var subscribeData = {
-    from: 'Brouwerij De Lavkiaan <brouwerijdelavkiaan@gmail.com>',
+    from: 'Brouwerij De Lavkiaan <info@brouwerijdelavkiaan.be>',
     to: req.body.email,
     subject: 'Bedankt voor jouw interesse!',
     text: "Hallo! \n \nWe hebben de inschrijving voor de nieuwsbrief goed ontvangen. \nWe houden je verder op de hoogte van al onze ontwikkelingen! \n\n\nEen stevige linker,\n\nBrouwerij De Lavkiaan"
@@ -41,7 +41,7 @@ router.post('/subscribe', function(req, res){
 
   var subscribeConfirmData = {
     from: req.body.email,
-    to: "Brouwerij De Lavkiaan <brouwerijdelavkiaan@gmail.com>",
+    to: "Brouwerij De Lavkiaan <info@brouwerijdelavkiaan.be>",
     subject: 'SUBSCRIBE',
     text: req.body.email
   };
@@ -64,7 +64,7 @@ router.post('/subscribe', function(req, res){
 router.post('/question', function(req,res){
   var questionData = {
     from: `${req.body.name} <${req.body.email}>`,
-    to: "brouwerijdelavkiaan@gmail.com",
+    to: "info@brouwerijdelavkiaan.be",
     subject: 'Vraag van ' + req.body.name ,
     text: req.body.body
   };
