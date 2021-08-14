@@ -21,7 +21,7 @@ function startTransaction(testMode, req, res){
 
   Paynl.Transaction.start({
     //we redirect the user back to this url after the payment
-    returnUrl: "https://brouwerijdelavkiaan.be/returnURL.html",
+    returnUrl: `https://brouwerijdelavkiaan.be/returnURL.html?value=${kost}`,
     //the ip address of the user
     ipAddress: req.connection.remoteAddress,
     //testmode
